@@ -14,6 +14,7 @@ const create = async (req, res) => {
       user: {
         _id: result._id,
         name: result.name,
+        password: result.password,
         email: result.email,
         role: result.role,
       },
@@ -28,7 +29,7 @@ const create = async (req, res) => {
 // -----------------------------
 const list = async (req, res) => {
   try {
-    const users = await User.find().select('name email role created updated');
+    const users = await User.find().select('name email role  created updated');
     res.json(users);
   } catch (err) {
     res.status(400).json({ error: errorHandler.getErrorMessage(err) });

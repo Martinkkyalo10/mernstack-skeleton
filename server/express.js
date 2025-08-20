@@ -7,6 +7,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import Template from './../template';
 import userRoutes from './routes/user.routes';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 const CURRENT_WORKING_DIR = process.cwd();
@@ -21,6 +22,13 @@ app.use(compress());
 app.use(helmet());
 app.use(cors());
 
+// handle express-jwt errors
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({ error: err.name + ': ' + err.message });
+  }
+});
+
 // ✅ Serve static files (logo, bundle.js, etc.)
 app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')));
 app.use('/public', express.static(path.join(CURRENT_WORKING_DIR, 'public')));
@@ -34,7 +42,7 @@ app.get('/', (req, res) => {
 // import userRoutes from './routes/user.routes.js'
 // import authRoutes from './routes/auth.routes.js'
 app.use('/api/users', userRoutes);
-// app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
 
 // ✅ Catch-all handler for unknown routes
 app.use((req, res) => {

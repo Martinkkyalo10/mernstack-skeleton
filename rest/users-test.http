@@ -1,0 +1,35 @@
+#######################################
+### CREATE a new user
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "testuser21@example.com",
+  "password": "Test@1234"
+}
+
+#######################################
+### LIST all users
+GET http://localhost:3000/api/users
+Accept: application/json
+
+#######################################
+### READ a single user by ID
+GET http://localhost:3000/api/users/68a623a7282d51fb6d615f18
+Accept: application/json
+
+#######################################
+### UPDATE a user
+PUT http://localhost:3000/api/users/{{USER_ID}}
+Content-Type: application/json
+
+{
+  "name": "Updated User",
+  "email": "updateduser@example.com"
+}
+
+#######################################
+### DELETE a user
+DELETE http://localhost:3000/api/users/{{USER_ID}}
+Accept: application/json
