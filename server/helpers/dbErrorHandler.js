@@ -48,4 +48,6 @@ const getErrorMessage = (err) => {
   return message;
 };
 
+// Export both named and default for compatibility
 export { getErrorMessage };
+export default { getErrorMessage };
