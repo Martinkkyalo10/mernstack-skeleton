@@ -5,7 +5,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const CURRENT_WORKING_DIR = process.cwd();
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-const config = {
+module.exports = {
   name: 'browser',
   mode: isDevelopment ? 'development' : 'production',
   devtool: isDevelopment ? 'eval-source-map' : 'source-map',
@@ -14,25 +14,32 @@ const config = {
     path.join(CURRENT_WORKING_DIR, 'client/main.js'),
   ].filter(Boolean),
   output: {
-    path: path.join(CURRENT_WORKING_DIR, '/dist'),
+    path: path.join(CURRENT_WORKING_DIR, 'dist'),
     filename: 'bundle.js',
     publicPath: '/dist/',
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              plugins: [
-                isDevelopment && require.resolve('react-refresh/babel'),
-              ].filter(Boolean),
-            },
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              isDevelopment && require.resolve('react-refresh/babel'),
+            ].filter(Boolean),
           },
-        ],
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: 'asset/resource',
       },
     ],
   },
@@ -40,12 +47,10 @@ const config = {
     isDevelopment && new webpack.HotModuleReplacementPlugin(),
     isDevelopment &&
       new ReactRefreshWebpackPlugin({
-        overlay: false, // 🚀 important: disable default WDS overlay
+        overlay: false, // disable WDS overlay
       }),
   ].filter(Boolean),
   resolve: {
     extensions: ['.js', '.jsx'],
   },
 };
-
-module.exports = config;
